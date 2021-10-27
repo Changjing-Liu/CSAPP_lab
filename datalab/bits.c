@@ -371,7 +371,7 @@ int floatFloat2Int(unsigned uf) {
  */
 unsigned floatPower2(int x) {
     //都是正数
-    
+    //123
     //int sign=x>>31&0x1;//取int的符号位
     int E=x;
     unsigned res;
