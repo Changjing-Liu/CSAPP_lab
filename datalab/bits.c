@@ -284,7 +284,7 @@ int howManyBits(int x) {
   x=x>>b1;
 
   b0=x;
-
+  //1
 
   return b16+b8+b4+b2+b1+b0+1;
 }
