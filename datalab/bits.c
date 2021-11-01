@@ -285,6 +285,7 @@ int howManyBits(int x) {
 
   b0=x;
   //1
+  //1
 
   return b16+b8+b4+b2+b1+b0+1;
 }
