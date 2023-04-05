@@ -1,13 +1,11 @@
 # CS:APP lab
-> These are solution for the algorithm course of Princeton
+> CS:APP记录
 ## Table of Contents
 * [ShellLab](#shelllab)
 <!-- * [License](#license) -->
 
 ## ShellLab
-这个lab可以说是我投入最认真的的一个。
-前提是要把pdf所有的内容都熟读标注，把书上相应内容反复看几遍。按照书上的例子敲进去，在参照其他博客改改，就能基本满足lab的要求。
-
+该项目是基于C语言编写一个的支持基本命令、I/O重定向、管道、信号和进程控制的Unix shell
 lab原始代码链接：
 [http://csapp.cs.cmu.edu/3e/shlab-handout.tar](http://csapp.cs.cmu.edu/3e/shlab-handout.tar)
 lab的pdf链接：
@@ -15,7 +13,7 @@ lab的pdf链接：
 
 ### 一、作业解释和要求
 这个Lab主要要求实现一个最简单的Unix shell程序（貌似是tinyshell）
-需要在原有框架下实现：
+需要具体实现以下函数：
 
  - eval：主程序，用于分析、解释命令行
  - builtin_cmd：识别、解释 bulit-in 命令：如quit，fg，bg 和jobs
