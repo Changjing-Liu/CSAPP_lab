@@ -5,68 +5,33 @@
 <!-- * [License](#license) -->
 
 ## ShellLab
-该项目是基于C语言编写一个的支持基本命令、I/O重定向、管道、信号和进程控制的Unix shell
+The project is to write a Unix shell in C language that supports basic commands, I/O redirection, pipes, signals, and process control.
 
-lab原始代码链接：
+Original code link：
 [http://csapp.cs.cmu.edu/3e/shlab-handout.tar](http://csapp.cs.cmu.edu/3e/shlab-handout.tar)
 
-lab的pdf链接：
+PDF link：
 [http://csapp.cs.cmu.edu/3e/shlab.pdf](http://csapp.cs.cmu.edu/3e/shlab.pdf)
-
-### 一、作业解释和要求
-这个Lab主要要求实现一个最简单的Unix shell程序（貌似是tinyshell）
-需要具体实现以下函数：
-
- - eval：主程序，用于分析、解释命令行
- - builtin_cmd：识别、解释 bulit-in 命令：如quit，fg，bg 和jobs
- - do_bgfg：执行 bg 和 fg 这些bulit-in命令
- - waitfg：等待前台程序（foreground job）完成
- - sigchld_handler：获取 SIGCHILD 信号
- - sigint_handler：获取 SIGINT（ctrl-c）信号
- - sigtstp_handler：获取SIGTSTP（ctrl-z） 信号
+ ### 1. Introduce of Unix Shells
+A shell is an interactive command-line interpreter that runs programs on behalf of the user. A shell repeatedly prints a prompt, waits for a command line on stdin, and then carries out some action, as directed by the contents of the command line. 
  
- ### 二、 Unix Shells的大致介绍
- Shell是一个交互的命令行解释器，并且其在用户面前运行程序。一个shell反复地打印提示，等待stdin的命令行（command line），随后按照命令行执行相应的操作。
-命令行是一个以空格分隔的ASCII文本单词序列。命令行中的第一个单词是内置命令的名称或可执行文件的路径名。剩下的单词是命令行参数。如果第一个单词是内置命令，shell会立即在当前进程中执行该命令。否则，该字被假定为可执行程序的路径名。在这种情况下，shell会fork一个子进程，然后在该子进程的上下文中加载并运行该程序。由于解释单个命令行而创建的子进程统称为作业。通常，一个作业可以由多个通过Unix管道连接的子进程组成。
+The command line is a sequence of ASCII text words delimited by whitespace. The first word in the command line is either the name of a built-in command or the pathname of an executable file. The remaining words are command-line arguments. If the first word is a built-in command, the shell immediately executes the command in the current process. Otherwise, the word is assumed to be the pathname of an executable program. In this case, the shell forks a child process, then loads and runs the program in the context of the child. The child processes created as a result of interpreting a single command line are known collectively as a job. In general, a job can consist of multiple child processes connected by Unix pipes.
 
-例如输入命令行：
-```c
-tsh> jobs
-```
-这使得 shell 执行 built-in 中的 jobs 指令。
-输入命令行：
-```bash
-tsh> /bin/ls -l -d
-```
-使得在前台运行ls程序。按照约定，shell确保当程序开始执行它的主例程时
+### 2. Explanation and Requirements 
+This lab requires the implementation of a simple Unix shell program (tinyshell) that specifically needs to implement the following functions.
 
-```bash
-int main(int argc, char *argv[])
-```
-其中 args 和 argv 参数有如下的值：
+ - eval：The main program that parsing and interpreting the command line.
+ - builtin_cmd：recognize and interpret bulit-in commands, such as quit，fg，bg and jobs
+ - do_bgfg：execute built-in commands such as bg and fg
+ - waitfg：wait for foreground jobs to complete
+ - sigchld_handler：get the SIGCHILD signal
+ - sigint_handler：get the SIGINT (ctrl-c) signal
+ - sigtstp_handler：get the SIGTSTP (ctrl-z) signal
+ 
 
-```bash
-argc == 3
-argv[0] == ‘‘/bin/ls’’
-argv[1]== ‘‘-l’’
-argv[2]== ‘‘-d’’
-```
-或者，键入命令行：
 
-```bash
-tsh> /bin/ls -l -d 
-```
-使得ls程序运行在后台。
-
-Shell支持作业控制（jobs contorl）的概念，它允许用户在后台和前台之间来回移动作业，并更改作业中进程的状态(运行、停止或终止)。键入 ctrl-c 将导致一个 SIGINT 信号传递给前台作业中的每个进程。SIGINT 的默认操作是终止进程。类似地，键入 ctrl-z 将导致向前台作业中的每个进程发送 SIGTSTP 信号。SIGTSTP的默认操作是将进程置于停止状态，直到被接收方唤醒为止。比如：
-
- - jobs：列出正在运行和已停止的后台任务
- - bg<job>：将已停止的后台作业更改为正在运行的后台作业。
- - fg<job>：将已停止或正在运行的后台作业更改为正在前台运行的作业。
- - kill<job>：杀死一个作业（进程）
-
-### 三、代码
-#### 0. main主程序
+### 3.Code
+#### 3.1 main()
 
 ```c
 
@@ -138,7 +103,7 @@ int main(int argc, char **argv)
 }
 ```
 
-#### 1.eval
+#### 3.2 eval()
 
 ```c
 void eval(char *cmdline) 
@@ -192,7 +157,7 @@ void eval(char *cmdline)
 }
 ```
 
-#### 2.builtin_cmd
+#### 3.3 builtin_cmd
 
 ```c
 /* 
@@ -227,7 +192,7 @@ int builtin_cmd(char **argv)
 
 <hr style=" border:solid; width:100px; height:1px;" color=#000000 size=1">
 
-## 3. do_bgfg
+## 3.4 do_bgfg
 
 ```c
 /* 
@@ -311,7 +276,7 @@ void do_bgfg(char **argv)
 
 ```
 
-#### 4.waitfg
+#### 3.5 waitfg
 
 ```c
 /* 
@@ -334,7 +299,7 @@ void waitfg(pid_t pid)
 
 ```
 
-#### 5.sigchld_handler
+#### 3.6 sigchld_handler
 
 ```c
 /* 
@@ -387,7 +352,7 @@ void sigchld_handler(int sig)
 
 ```
 
-#### 6.sigint_handler
+#### 3.7 sigint_handler
 
 ```c
 /* 
@@ -409,7 +374,7 @@ void sigint_handler(int sig)
 
 ```
 
-#### 7.sigtstp_handler
+#### 3.8 sigtstp_handler
 
 ```c
 /*
